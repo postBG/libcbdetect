@@ -14,23 +14,24 @@ from score_corners import scoreCorners
 from plot_corners import plotCorners
 
 def main():
-    img = plt.imread('../data/03.png')
-
-    # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
-    radius = [4, 8, 12]
-
-    # normalize values between [0, 1]
-    img = cv2.normalize(img.astype('float'), None, 0.0, 1.0, cv2.NORM_MINMAX)
+    img = plt.imread('../data/04.png')
 
     # convert to grayscale image
     if (len(img.shape) == 3):
         img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+
+    # normalize values between [0, 1]
+    img = cv2.normalize(img.astype('float'), None, 0.0, 1.0, cv2.NORM_MINMAX)
+
 
     # compute image derivatives
     img_du, img_dv, img_angle, img_weight = get_img_derivatives(img)
 
     # scale input image
     img = (img - np.min(img)) / (np.max(img) - np.min(img))
+
+    # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
+    radius = [4, 8, 12]
 
     # find initial corners
     initial_corners = findCorners(img, 0.01, radius)
