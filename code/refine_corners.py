@@ -15,7 +15,6 @@ class Corners:
         self.v1 = np.zeros(NMS_corners.shape)
         self.v2 = np.zeros(NMS_corners.shape)
         self.score = []
-
 def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
 
     print('Start Refining ...')
@@ -47,8 +46,8 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
         A1 = np.zeros((2,2))
         A2 = np.zeros((2,2))
 
-        for v in range(max(cv-r, 0), min(cv+r, height) + 1):
-            for u in range(max(cu-r, 0), min(cu+r, width) + 1):
+        for v in range(max(cv-r, 0), min(cv+r+1, height)):
+            for u in range(max(cu-r, 0), min(cu+r+1, width)):
                 # pixel orientation vector
                 o = [img_du[v, u], img_dv[v, u]]
                 if (np.linalg.norm(o) < 0.1):
@@ -69,14 +68,12 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
 
         foo1, v1 = LA.eig(A1)      # eigenvalue, eigenvector
         min_eigenval_idx = np.argmin(foo1)
-        v1 = v1[min_eigenval_idx, :]
-####        v1 = v1[:, min_eigenval_idx]
+        v1 = v1[:, min_eigenval_idx]
         corners.v1[i] = v1
 
         foo2, v2 = LA.eig(A2)
         min_eigenval_idx = np.argmin(foo2)
-        v2 = v2[min_eigenval_idx, :]
-####        v2 = v2[:,min_eigenval_idx]
+        v2 = v2[:,min_eigenval_idx]
         corners.v2[i] = v2
 
         ##############################
@@ -85,8 +82,8 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
         G = np.zeros((2,2))
         b = np.zeros((2,1))
 
-        for v in range(max(cv - r, 0), min(cv + r, height) + 1):
-            for u in range(max(cu-r, 0), min(cu+r, width) + 1):
+        for v in range(max(cv - r, 0), min(cv + r+1, height)):
+            for u in range(max(cu-r, 0), min(cu+r+1, width)):
                 # pixel orientation vector
                 o = [img_du[v, u], img_dv[v, u]]
                 if (np.linalg.norm(o) < 0.1):

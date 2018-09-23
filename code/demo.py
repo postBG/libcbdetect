@@ -14,7 +14,7 @@ from score_corners import scoreCorners
 from plot_corners import plotCorners
 
 def main():
-    img = plt.imread('../data/01.png')
+    img = plt.imread('../data/03.png')
 
     # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
     radius = [4, 8, 12]
@@ -25,7 +25,6 @@ def main():
     # convert to grayscale image
     if (len(img.shape) == 3):
         img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-
 
     # compute image derivatives
     img_du, img_dv, img_angle, img_weight = get_img_derivatives(img)

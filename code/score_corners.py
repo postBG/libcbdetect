@@ -14,14 +14,14 @@ def scoreCorners(img, img_angle, img_weight, corners, radius, tau):
         u = int(u)
         v = int(v)
         # compute corner statistics @ radius 1
-        score_list = []
+        score_list = [0, 0, 0]
         for j in range(0, len(radius)):
-            if(u > radius[j] and u <= width-radius[j] and v > radius[j] and v<= height-radius[j]):
-                img_sub         = img[v-radius[j]:v+radius[j], u-radius[j]:u+radius[j]]
-                img_sub = img[v - radius[j]:v + radius[j] + 1, u - radius[j]:u + radius[j] + 1]
-                img_angle_sub = img_angle[v - radius[j]:v + radius[j] + 1, u - radius[j]: u + radius[j] + 1]
-                img_weight_sub = img_weight[v - radius[j]:v + radius[j] + 1, u - radius[j]:u + radius[j] + 1]
-                score_list.append(cornerCorrelationScore(img_sub, img_weight_sub, corners.v1[i, :], corners.v2[i, :]))
+            if(v - radius[j] >= 0 and v + radius[j] + 1 <= height and u - radius[j] >= 0 and u + radius[j] + 1 <= width):
+            #if(u > radius[j] and u <= width-radius[j] and v > radius[j] and v<= height-radius[j]):
+                img_sub         = img       [v - radius[j]:v + radius[j] + 1, u - radius[j]:u + radius[j] + 1]
+                img_angle_sub   = img_angle [v - radius[j]:v + radius[j] + 1, u - radius[j]:u + radius[j] + 1]
+                img_weight_sub  = img_weight[v - radius[j]:v + radius[j] + 1, u - radius[j]:u + radius[j] + 1]
+                score_list[j]   = cornerCorrelationScore(img_sub, img_weight_sub, corners.v1[i, :], corners.v2[i, :])
 
         max_score = np.max(score_list)
         # take highest score
@@ -30,9 +30,9 @@ def scoreCorners(img, img_angle, img_weight, corners, radius, tau):
             idx_to_remove.append(i)
 
     # remove corners without edges
-    corners.p = np.delete(corners.p, idx_to_remove, 0)
-    corners.v1 = np.delete(corners.v1, idx_to_remove, 0)
-    corners.v2 = np.delete(corners.v2, idx_to_remove, 0)
+    corners.p   = np.delete(corners.p, idx_to_remove, 0)
+    corners.v1  = np.delete(corners.v1, idx_to_remove, 0)
+    corners.v2  = np.delete(corners.v2, idx_to_remove, 0)
     corners.score = np.delete(corners.score, idx_to_remove, 0)
 
     return corners

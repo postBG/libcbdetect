@@ -52,6 +52,8 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
 
     # intensity score: max. of the 2 cases
     score_intensity = max(max(score_1, score_2), 0)
+    if(np.isnan(score_intensity)):
+        score_intensity = 0
     # final score: product of gradient and intensity score
     score = score_gradient * score_intensity
 

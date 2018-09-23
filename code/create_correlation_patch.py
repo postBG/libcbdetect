@@ -6,7 +6,7 @@ import math
 from scipy.signal import convolve2d
 from scipy.stats import norm
 
-class  Template:
+class Template:
     def __init__(self, height, width):
         self.a1 = np.zeros((height, width))
         self.b1 = np.zeros((height, width))
@@ -30,8 +30,8 @@ def createCorrelationPatch(properties):
     template = Template(height, width)
 
     # midpoint
-    mu = radius + 1
-    mv = radius + 1
+    mu = radius
+    mv = radius
 
     # compute normals from angles
     n1 = [-np.sin(angle_1), np.cos(angle_1)]
@@ -42,7 +42,7 @@ def createCorrelationPatch(properties):
     for v in range(0, height):
         for u in range(0, width):
             # vector
-            vec = [u-mu+1, v-mv+1]
+            vec = [u-mu, v-mv]
             dist = np.linalg.norm(vec)
 
             # check on which side of the normals we are
@@ -55,7 +55,7 @@ def createCorrelationPatch(properties):
                 template.a2[v][u] = norm.pdf(dist, 0, radius/2)
             elif (s1 <= -0.1 and s2 >= 0.1):
                 template.b1[v][u] = norm.pdf(dist, 0, radius/2)
-            elif (s1 >= 0.1 and s2 <= 0-.1):
+            elif (s1 >= 0.1 and s2 <= -0.1):
                 template.b2[v][u] = norm.pdf(dist, 0, radius/2)
 
     # normalize
