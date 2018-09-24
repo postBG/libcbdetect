@@ -46,9 +46,6 @@ def main():
     # score corners
     final_corners = scoreCorners(img, img_angle, img_weight, refined_corners, radius, 0.01)
 
-    # to compare with MATLAB
-#    sorted_p = final_corners.p[np.argsort(final_corners.p[:, 0])]
-
     # make v1(:,1)+v1(:,2) positive
     idx = final_corners.v1[:, 0] + final_corners.v1[:, 1] < 0
     final_corners.v1[idx, :] = -final_corners.v1[idx, :]
