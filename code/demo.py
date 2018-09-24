@@ -12,9 +12,10 @@ from get_image_derivatives import get_img_derivatives
 from refine_corners import refineCorners
 from score_corners import scoreCorners
 from plot_corners import plotCorners
+from chessboards_from_corners import chessboardsFromCorners
 
 def main():
-    img = plt.imread('../data/04.png')
+    img = plt.imread('../data/01.png')
 
     # convert to grayscale image
     if (len(img.shape) == 3):
@@ -46,10 +47,23 @@ def main():
     final_corners = scoreCorners(img, img_angle, img_weight, refined_corners, radius, 0.01)
 
     # to compare with MATLAB
-    sorted_p = final_corners.p[np.argsort(final_corners.p[:, 0])]
+#    sorted_p = final_corners.p[np.argsort(final_corners.p[:, 0])]
+
+    # make v1(:,1)+v1(:,2) positive
+    idx = final_corners.v1[:, 0] + final_corners.v1[:, 1] < 0
+    final_corners.v1[idx, :] = -final_corners.v1[idx, :]
+
+    corners = final_corners
+    sorted_idx = final_corners.p[:, 0].argsort()
+    corners.p = final_corners.p[sorted_idx]
+    corners.v1 = final_corners.v1[sorted_idx]
+    corners.v2 = final_corners.v2[sorted_idx]
+    corners.score = final_corners.score[sorted_idx]
+
+    chessboardsFromCorners(corners)
 
     # matplot
-    plotCorners(img, final_corners)
+    plotCorners(img, final_corners.p)
 
     print('done')
 

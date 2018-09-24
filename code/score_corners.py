@@ -29,7 +29,7 @@ def scoreCorners(img, img_angle, img_weight, corners, radius, tau):
         if(max_score < tau or np.isnan(max_score)):
             idx_to_remove.append(i)
 
-    # remove corners without edges
+    # remove low scoring corners
     corners.p   = np.delete(corners.p, idx_to_remove, 0)
     corners.v1  = np.delete(corners.v1, idx_to_remove, 0)
     corners.v2  = np.delete(corners.v2, idx_to_remove, 0)

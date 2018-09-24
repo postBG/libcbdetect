@@ -15,6 +15,7 @@ class Corners:
         self.v1 = np.zeros(NMS_corners.shape)
         self.v2 = np.zeros(NMS_corners.shape)
         self.score = []
+
 def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
 
     print('Start Refining ...')
