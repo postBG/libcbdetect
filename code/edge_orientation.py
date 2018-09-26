@@ -17,8 +17,8 @@ def edgeOrientations(img_angle, img_weight):
     bin_num = 32
 
     # convert images to vectors
-    vec_angle = img_angle.T.reshape(-1)
-    vec_weight = img_weight.T.reshape(-1)
+    vec_angle   = img_angle.T.reshape(-1)
+    vec_weight  = img_weight.T.reshape(-1)
 
     # convert angles from normals to directions
     vec_angle = vec_angle + np.pi / 2
@@ -28,9 +28,9 @@ def edgeOrientations(img_angle, img_weight):
     angle_hist = np.zeros((bin_num))
     for i in range(0, len(vec_angle)):
         bin = int(max(min(np.floor(vec_angle[i] / (np.pi / bin_num)), bin_num - 1), 0))
-        angle_hist[bin] = angle_hist[bin] + vec_weight[i];
+        angle_hist[bin] = angle_hist[bin] + vec_weight[i]
 
-    modes, angle_hist_smoothed = findModesMeanShift(angle_hist, 1);
+    modes, angle_hist_smoothed = findModesMeanShift(angle_hist, 1)
 
     # if only one or no mode => return invalid corner
     if (len(modes) <= 1):
