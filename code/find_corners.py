@@ -8,17 +8,17 @@ from scipy.stats import norm
 
 from create_correlation_patch import createCorrelationPatch
 
-def findCorners(img, tau, radius):
+def findCorners(img, radius):
     # filter image
     print('Start Filtering ...')
 
     # template properties
-    template_props = [[0, np.pi / 2, radius[0]],
-                      [np.pi / 4, -np.pi / 4, radius[0]],
-                      [0, np.pi / 2, radius[1]],
-                      [np.pi / 4, -np.pi / 4, radius[1]],
-                      [0, np.pi / 2, radius[2]],
-                      [np.pi / 4, -np.pi / 4, radius[2]]]
+    template_props = [[0,        np.pi/2, radius[0]],
+                      [np.pi/4, -np.pi/4, radius[0]],
+                      [0,        np.pi/2, radius[1]],
+                      [np.pi/4, -np.pi/4, radius[1]],
+                      [0,        np.pi/2, radius[2]],
+                      [np.pi/4, -np.pi/4, radius[2]]]
 
     img_corners = np.zeros(img.shape)
     for i in range(0, len(template_props)):

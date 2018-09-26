@@ -14,6 +14,7 @@ class Template:
         self.b2 = np.zeros((height, width))
 
     def do_normalize(self):
+        np.seterr(divide='ignore', invalid='ignore')
         self.a1 = self.a1 / np.sum(self.a1)
         self.a2 = self.a2 / np.sum(self.a2)
         self.b1 = self.b1 / np.sum(self.b1)

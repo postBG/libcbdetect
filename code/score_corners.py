@@ -17,7 +17,6 @@ def scoreCorners(img, img_angle, img_weight, corners, radius, tau):
         score_list = [0, 0, 0]
         for j in range(0, len(radius)):
             if(v - radius[j] >= 0 and v + radius[j] + 1 <= height and u - radius[j] >= 0 and u + radius[j] + 1 <= width):
-            #if(u > radius[j] and u <= width-radius[j] and v > radius[j] and v<= height-radius[j]):
                 img_sub         = img       [v - radius[j]:v + radius[j] + 1, u - radius[j]:u + radius[j] + 1]
                 img_angle_sub   = img_angle [v - radius[j]:v + radius[j] + 1, u - radius[j]:u + radius[j] + 1]
                 img_weight_sub  = img_weight[v - radius[j]:v + radius[j] + 1, u - radius[j]:u + radius[j] + 1]
