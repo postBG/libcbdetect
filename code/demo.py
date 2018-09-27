@@ -14,11 +14,12 @@ from get_image_derivatives import get_img_derivatives
 from refine_corners import refineCorners
 from score_corners import scoreCorners
 from plot_corners import plotCorners
-#from chessboards_from_corners import chessboardsFromCorners
+from chessboards_from_corners import chessboardsFromCorners
+from plot_chessboards import plotChessboards
 
 def main():
 
-    img = plt.imread('../data/01.png')
+    img = plt.imread('../data/02.png')
     # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
     radius = [4, 8, 12]
 
@@ -47,15 +48,7 @@ def main():
     # make v1(:,1)+v1(:,2) positive
     idx = final_corners.v1[:, 0] + final_corners.v1[:, 1] < 0
     final_corners.v1[idx, :] = -final_corners.v1[idx, :]
-
-    corners = final_corners
-    sorted_idx  = final_corners.p[:, 0].argsort()
-    corners.p   = final_corners.p[sorted_idx]
-    corners.v1  = final_corners.v1[sorted_idx]
-    corners.v2  = final_corners.v2[sorted_idx]
-    corners.score = final_corners.score[sorted_idx]
-
-    #chessboardsFromCorners(corners)
+    chessboards = chessboardsFromCorners(final_corners)
 
     elapsed_time = time.time() - start_time
 
@@ -66,7 +59,16 @@ def main():
     print('total time = ', elapsed_time)
 
     # matplot
-    plotCorners(img, final_corners.p)
+    plotChessboards(img, chessboards, final_corners)
+
+    '''
+    corners = final_corners
+    sorted_idx  = final_corners.p[:, 0].argsort()
+    corners.p   = final_corners.p[sorted_idx]
+    corners.v1  = final_corners.v1[sorted_idx]
+    corners.v2  = final_corners.v2[sorted_idx]
+    corners.score = final_corners.score[sorted_idx]
+    '''
 
     print('done')
 

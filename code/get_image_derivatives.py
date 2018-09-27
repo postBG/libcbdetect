@@ -24,14 +24,5 @@ def get_img_derivatives(img):
     # correct angle to lie in between [0,pi]
     img_angle[img_angle <     0] = img_angle[img_angle <     0] + np.pi
     img_angle[img_angle > np.pi] = img_angle[img_angle > np.pi] - np.pi
-    '''
-    h, w = img_angle.shape
-    for i in range(0, h):
-        for j in range(0, w):
-            if (img_angle[i][j] < 0):
-                img_angle[i][j] += np.pi
-            elif (img_angle[i][j] > np.pi):
-                img_angle[i][j] -= np.pi
-    '''
 
     return img_du, img_dv, img_angle, img_weight

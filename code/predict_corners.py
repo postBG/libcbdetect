@@ -11,8 +11,8 @@ def predictCorners(p1, p2, p3):
     a3 = 2*a2 - a1
 
     # predict scales
-    s1 = np.sqrt(v1[:, 0]**2 + v1[:, 1]**2)
-    s2 = np.sqrt(v2[:, 0]**2 + v2[:, 1]**2)
+    s1 = np.sqrt(v1[:, 0]**2 + v1[:, 1]**2).reshape(-1, 1)
+    s2 = np.sqrt(v2[:, 0]**2 + v2[:, 1]**2).reshape(-1, 1)
     s3 = 2*s2 - s1
 
     # predict p3 (the factor 0.75 ensures that under extreme
