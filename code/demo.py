@@ -14,7 +14,7 @@ from get_image_derivatives import get_img_derivatives
 from refine_corners import refineCorners
 from score_corners import scoreCorners
 from plot_corners import plotCorners
-from chessboards_from_corners import chessboardsFromCorners
+#from chessboards_from_corners import chessboardsFromCorners
 
 def main():
 
@@ -55,13 +55,13 @@ def main():
     corners.v2  = final_corners.v2[sorted_idx]
     corners.score = final_corners.score[sorted_idx]
 
-    chessboardsFromCorners(corners)
+    #chessboardsFromCorners(corners)
 
     elapsed_time = time.time() - start_time
 
     print('findCorners_time = ', findCorners_time - start_time)
     print('NMS_time = ', NMS_time - findCorners_time)
-    print('refineCorners_time = ', refineCorners_time - NMS_time)
+    print('refine_time = ', refineCorners_time - NMS_time)
     print('score_time = ', score_time - refineCorners_time)
     print('total time = ', elapsed_time)
 

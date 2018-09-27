@@ -1,4 +1,7 @@
 import numpy as np
+
+from predict_corners import predictCorners
+
 def growChessboard(chessboard, corners, border_type):
     # return immediately, if there do not exist any chessboards
     if (len(chessboard) == 0):
