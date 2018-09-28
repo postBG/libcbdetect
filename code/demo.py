@@ -13,7 +13,6 @@ from non_maxima_suppression import nonMaximumSuppression
 from get_image_derivatives import get_img_derivatives
 from refine_corners import refineCorners
 from score_corners import scoreCorners
-from plot_corners import plotCorners
 from chessboards_from_corners import chessboardsFromCorners
 from plot_chessboards import plotChessboards
 
