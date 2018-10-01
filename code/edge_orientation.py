@@ -25,7 +25,7 @@ def edgeOrientations(img_angle, img_weight):
     vec_angle[vec_angle > np.pi] -= np.pi
 
     # create histogram
-    angle_hist = np.zeros((bin_num))
+    angle_hist = np.zeros(bin_num)
     for i in range(0, len(vec_angle)):
         bin = int(max(min(np.floor(vec_angle[i] / (np.pi / bin_num)), bin_num - 1), 0))
         angle_hist[bin] = angle_hist[bin] + vec_weight[i]

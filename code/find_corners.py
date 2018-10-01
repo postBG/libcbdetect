@@ -23,7 +23,7 @@ def findCorners(img, radius):
     img_corners = np.zeros(img.shape)
     for i in range(0, len(template_props)):
         # create correlation template
-        template = createCorrelationPatch(template_props[i])
+        template = createCorrelationPatch(template_props[i][0], template_props[i][1], template_props[i][2])
 
         # filter image according with current template
         img_corners_a1 = convolve2d(img, template.a1, 'same')
@@ -33,6 +33,7 @@ def findCorners(img, radius):
 
         # compute mean
         img_corners_mu = (img_corners_a1 + img_corners_a2 + img_corners_b1 + img_corners_b2) / 4
+
         # case 1: a=white, b=black
         img_corners_a = np.minimum(np.subtract(img_corners_a1, img_corners_mu),
                                    np.subtract(img_corners_a2, img_corners_mu))

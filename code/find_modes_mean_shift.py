@@ -39,7 +39,7 @@ def findModesMeanShift(hist, sigma):
             else:
                 break
 
-        if len(modes) == 0:
+        if (len(modes) == 0):
             modes = np.array([[j, hist_smoothed[j]]])
         elif (j not in modes[:, 0]):
             new = np.array([[j, hist_smoothed[j]]])

@@ -8,8 +8,8 @@ def nonMaximumSuppression(img, n, tau, margin):
         for i in range(n + margin, width - n - margin + 1, n + 1):
             # initial value
             maxi, maxj = i, j
-            maxval = img[j][i]
             # update maxval if found
+            maxval = img[j][i]
 
             for j2 in range(j, j + n + 1):
                 for i2 in range(i, i + n + 1):

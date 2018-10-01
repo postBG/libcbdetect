@@ -19,16 +19,20 @@ class Corners:
 def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
 
     print('Start Refining ...')
+    print('# refine corners = ', len(NMS_corners))
     corners = Corners(NMS_corners)
+
+    sorted_idx = corners.p[:, 0].argsort()
+    corners.p = corners.p[sorted_idx]
+
     height, width = img_du.shape
 
     idx_to_remove = []
     # for all corners do
     for i in range(0, len(corners.p)):
         # extract current corner location
-        cu, cv = corners.p[i]
-        cu = int(cu)
-        cv = int(cv)
+        cu, cv = corners.p[i].astype(int)
+
         # estimate edge orientations
         img_angle_sub  = img_angle[max(cv-r, 0):min(cv+r+1, height), max(cu-r, 0):min(cu+r+1, width)]
         img_weight_sub = img_weight[max(cv-r, 0):min(cv+r+1, height), max(cu-r, 0):min(cu+r+1, width)]
@@ -40,10 +44,10 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
         # continue, if invalid edge orientations
         if (v1 == [0, 0] or v2 == [0, 0]):
             continue
+
         #################################
         # corner orientation refinement #
         #################################
-
         A1 = np.zeros((2,2))
         A2 = np.zeros((2,2))
 
@@ -66,7 +70,6 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
 
 
         # set new corner orientation
-
         foo1, v1 = LA.eig(A1)      # eigenvalue, eigenvector
         min_eigenval_idx = np.argmin(foo1)
         v1 = v1[:, min_eigenval_idx]
@@ -92,7 +95,7 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
                 o = o / np.linalg.norm(o)
 
                 # robust subpixel corner estimation
-                if (cu != u or v != cv): # do not consider center pixel
+                if (u != cu or v != cv): # do not consider center pixel
 
                     #compute rel. position of pixel and distance to vectors
                     w = np.subtract([u, v], [cu, cv])
@@ -115,16 +118,16 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
             # set corner to invalid, if position update is very large
             if (np.linalg.norm(corner_pos_new - corner_pos_old) >= 4):
                 idx_to_remove.append(i)
-                corners.v1[i] = [0, 0]
-                corners.v2[i] = [0, 0]
 
             corners.p[i] = corner_pos_new ######
 
         # otherwise: set corner to invalid
         else:
             idx_to_remove.append(i)
-            corners.v1[i] = [0, 0]
-            corners.v2[i] = [0, 0]
+
+    row, col = np.where(corners.v1 == [0, 0])
+    idx_to_remove = idx_to_remove + list(row)
+    idx_to_remove = list(set(idx_to_remove))
 
     # remove corners without edges
     corners.p = np.delete(corners.p, idx_to_remove, 0)

@@ -1,5 +1,5 @@
 import numpy as np
-
+import time
 from create_correlation_patch import createCorrelationPatch
 
 def cornerCorrelationScore(img, img_weight, v1, v2):
@@ -10,7 +10,7 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
 
     # compute gradient filter kernel (bandwith = 3 px)
     for y in range(0, img_weight.shape[0]):
-         for x in range(0, img_weight.shape[1]):
+        for x in range(0, img_weight.shape[1]):
             p1 = np.subtract([x, y], c)
             p2 = np.matmul(p1, v1) * v1
             p3 = np.matmul(p1, v2) * v2
@@ -30,7 +30,10 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
     score_gradient = max(np.sum(vec_weight * vec_filter) / (len(vec_weight) - 1), 0)
 
     # create intensity filter kernel
-    template = createCorrelationPatch([np.arctan2(v1[1], v1[0]), np.arctan2(v2[1], v2[0]), c[0]])
+    st = time.time()
+    template = createCorrelationPatch(np.arctan2(v1[1], v1[0]), np.arctan2(v2[1], v2[0]), c[0])
+    end = time.time()
+    #print('createCorrelationPatch  = ', end-st)
 
     # checkerboard responses
     a1 = np.sum(template.a1 * img)

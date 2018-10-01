@@ -1,10 +1,6 @@
 import numpy as np
-from numpy import linalg as LA
-import matplotlib.pyplot as plt
-import cv2
-import math
-from scipy.signal import convolve2d
 from scipy.stats import norm
+import time
 
 class Template:
     def __init__(self, height, width):
@@ -21,44 +17,35 @@ class Template:
         self.b2 = self.b2 / np.sum(self.b2)
 
 
-def createCorrelationPatch(properties):
-    angle_1, angle_2, radius = properties
+def createCorrelationPatch(angle_1, angle_2, radius):
 
-    width  = int(radius*2 + 1)
-    height = int(radius*2 + 1)
+    patch_size = int(radius*2 + 1)
 
     # initialize template
-    template = Template(height, width)
-
-    # midpoint
-    mu = radius
-    mv = radius
+    template = Template(patch_size, patch_size)
 
     # compute normals from angles
     n1 = [-np.sin(angle_1), np.cos(angle_1)]
     n2 = [-np.sin(angle_2), np.cos(angle_2)]
 
     # for all points in template do
-
-    for v in range(0, height):
-        for u in range(0, width):
+    for v in range(0, patch_size):
+        for u in range(0, patch_size):
             # vector
-            vec = [u-mu, v-mv]
-            dist = np.linalg.norm(vec)
+            vec = [u-radius, v-radius]
 
             # check on which side of the normals we are
-            s1 = np.matmul(vec, np.transpose(n1))
-            s2 = np.matmul(vec, np.transpose(n2))
+            s1 = np.matmul(vec, n1)
+            s2 = np.matmul(vec, n2)
 
             if (s1 <= -0.1 and s2 <= -0.1):
-                template.a1[v][u] = norm.pdf(dist, 0, radius/2) # x, mu, sigma
+                template.a1[v][u] = norm.pdf(np.linalg.norm(vec), 0, radius/2) # x, mu, sigma
             elif (s1 >= 0.1 and s2 >= 0.1):
-                template.a2[v][u] = norm.pdf(dist, 0, radius/2)
+                template.a2[v][u] = norm.pdf(np.linalg.norm(vec), 0, radius/2)
             elif (s1 <= -0.1 and s2 >= 0.1):
-                template.b1[v][u] = norm.pdf(dist, 0, radius/2)
+                template.b1[v][u] = norm.pdf(np.linalg.norm(vec), 0, radius/2)
             elif (s1 >= 0.1 and s2 <= -0.1):
-                template.b2[v][u] = norm.pdf(dist, 0, radius/2)
-
+                template.b2[v][u] = norm.pdf(np.linalg.norm(vec), 0, radius/2)
     # normalize
     template.do_normalize()
     return template
