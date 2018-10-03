@@ -5,7 +5,7 @@ from directional_neighbor import directionalNeighbor
 
 def initChessboard(corners, idx):
     # not enough corners
-    if (corners.p.shape[0] < 9):
+    if corners.p.shape[0] < 9:
         return []
 
     # init chessboard hypothesis
@@ -31,8 +31,8 @@ def initChessboard(corners, idx):
     chessboard[2, 2], dist2[5] = directionalNeighbor(chessboard[1, 2], +v2, chessboard, corners)
 
     # initialization must be homogenously distributed
-    if (any(np.isinf(dist1)) or any(np.isinf(dist2)) or np.std(dist1) / np.mean(dist1) > 0.3 or np.std(dist2) / np.mean(
-            dist2) > 0.3):
+    if any(np.isinf(dist1)) or any(np.isinf(dist2)) or \
+            np.std(dist1) / np.mean(dist1) > 0.3 or np.std(dist2) / np.mean(dist2) > 0.3:
         return []
 
     return chessboard

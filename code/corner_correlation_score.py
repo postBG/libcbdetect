@@ -16,7 +16,7 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
             p2 = np.matmul(p1, v1) * v1
             p3 = np.matmul(p1, v2) * v2
 
-            if (np.linalg.norm(p1 - p2) <= 1.5 or np.linalg.norm(p1 - p3) <= 1.5):
+            if np.linalg.norm(p1 - p2) <= 1.5 or np.linalg.norm(p1 - p3) <= 1.5:
                 img_filter[y, x] = 1
 
     # convert into vectors

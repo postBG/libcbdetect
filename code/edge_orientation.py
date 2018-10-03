@@ -28,7 +28,7 @@ def edgeOrientations(img_angle, img_weight):
     modes, angle_hist_smoothed = findModesMeanShift(angle_hist, 1)
 
     # if only one or no mode => return invalid corner
-    if (len(modes) <= 1):
+    if len(modes) <= 1:
         return v1, v2
 
     # compute orientation at modes
@@ -44,7 +44,7 @@ def edgeOrientations(img_angle, img_weight):
     delta_angle = min(modes[1, 2] - modes[0, 2], modes[0, 2] + np.pi - modes[1, 2])
 
     # if angle too small => return invalid corner
-    if (delta_angle <= 0.3):
+    if delta_angle <= 0.3:
         return v1, v2
 
     # set statistics: orientations
