@@ -7,17 +7,24 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
     # center
     center = (img_weight.shape[0] + 1) / 2
     c = [center - 1, center - 1]
-    img_filter = -1 * np.ones(img_weight.shape)
 
     # compute gradient filter kernel (bandwith = 3 px)
-    for y in range(0, img_weight.shape[0]):
-        for x in range(0, img_weight.shape[1]):
-            p1 = np.subtract([x, y], c)
-            p2 = np.matmul(p1, v1) * v1
-            p3 = np.matmul(p1, v2) * v2
+    vecs = np.mgrid[0:img_weight.shape[1], 0:img_weight.shape[0]].T.reshape(-1, 2)
+    p1s = vecs - c
+    p2s = np.matmul(p1s, v1)[:, np.newaxis] * v1
+    p3s = np.matmul(p1s, v2)[:, np.newaxis] * v2
 
-            if np.linalg.norm(p1 - p2) <= 1.5 or np.linalg.norm(p1 - p3) <= 1.5:
-                img_filter[y, x] = 1
+    points_to_filter = np.logical_or(np.linalg.norm(p1s - p2s, axis=1) <= 1.5, np.linalg.norm(p1s - p3s, axis=1) <= 1.5)
+    img_filter = points_to_filter.reshape(img_weight.shape[0], img_weight.shape[1]) * 2 - 1
+
+    # for y in range(0, img_weight.shape[0]):
+    #     for x in range(0, img_weight.shape[1]):
+    #         p1 = np.subtract([x, y], c)
+    #         p2 = np.matmul(p1, v1) * v1
+    #         p3 = np.matmul(p1, v2) * v2
+    #
+    #         if np.linalg.norm(p1 - p2) <= 1.5 or np.linalg.norm(p1 - p3) <= 1.5:
+    #             img_filter[y, x] = 1
 
     # convert into vectors
     vec_weight = np.transpose(img_weight).reshape(-1, 1)
