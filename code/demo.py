@@ -13,7 +13,7 @@ from score_corners import scoreCorners
 
 
 def main():
-    img = plt.imread('../data/00.png')
+    img = plt.imread('../data/02.png')
     # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
     radius = [4, 8, 12]
 
