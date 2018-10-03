@@ -1,12 +1,8 @@
 import numpy as np
 from numpy import linalg as LA
-import matplotlib.pyplot as plt
-import cv2
-import math
-from scipy.signal import convolve2d
-from scipy.stats import norm
 
 from edge_orientation import edgeOrientations
+
 
 class Corners:
     def __init__(self, NMS_corners):
@@ -16,8 +12,8 @@ class Corners:
         self.v2 = np.zeros(NMS_corners.shape)
         self.score = []
 
-def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
 
+def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
     print('Start Refining ...')
     print('# refine corners = ', len(NMS_corners))
     corners = Corners(NMS_corners)
@@ -34,8 +30,8 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
         cu, cv = corners.p[i].astype(int)
 
         # estimate edge orientations
-        img_angle_sub  = img_angle[max(cv-r, 0):min(cv+r+1, height), max(cu-r, 0):min(cu+r+1, width)]
-        img_weight_sub = img_weight[max(cv-r, 0):min(cv+r+1, height), max(cu-r, 0):min(cu+r+1, width)]
+        img_angle_sub = img_angle[max(cv - r, 0):min(cv + r + 1, height), max(cu - r, 0):min(cu + r + 1, width)]
+        img_weight_sub = img_weight[max(cv - r, 0):min(cv + r + 1, height), max(cu - r, 0):min(cu + r + 1, width)]
         v1, v2 = edgeOrientations(img_angle_sub, img_weight_sub)
 
         corners.v1[i] = v1
@@ -48,46 +44,45 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
         #################################
         # corner orientation refinement #
         #################################
-        A1 = np.zeros((2,2))
-        A2 = np.zeros((2,2))
+        A1 = np.zeros((2, 2))
+        A2 = np.zeros((2, 2))
 
-        for v in range(max(cv-r, 0), min(cv+r+1, height)):
-            for u in range(max(cu-r, 0), min(cu+r+1, width)):
+        for v in range(max(cv - r, 0), min(cv + r + 1, height)):
+            for u in range(max(cu - r, 0), min(cu + r + 1, width)):
                 # pixel orientation vector
                 o = [img_du[v, u], img_dv[v, u]]
                 if (np.linalg.norm(o) < 0.1):
                     continue
                 o = o / np.linalg.norm(o)
                 # robust refinement of orientation 1
-                if(np.abs(np.matmul(o, v1)) < 0.25): # inlier?
+                if (np.abs(np.matmul(o, v1)) < 0.25):  # inlier?
                     A1[0] = A1[0] + img_du[v, u] * np.array([img_du[v, u], img_dv[v, u]])
                     A1[1] = A1[1] + img_dv[v, u] * np.array([img_du[v, u], img_dv[v, u]])
 
                 # robust refinement of orientation 2
-                if(np.abs(np.matmul(o, v2)) < 0.25): # inlier?
+                if (np.abs(np.matmul(o, v2)) < 0.25):  # inlier?
                     A2[0] = A2[0] + img_du[v, u] * np.array([img_du[v, u], img_dv[v, u]])
                     A2[1] = A2[1] + img_dv[v, u] * np.array([img_du[v, u], img_dv[v, u]])
 
-
         # set new corner orientation
-        foo1, v1 = LA.eig(A1)      # eigenvalue, eigenvector
+        foo1, v1 = LA.eig(A1)  # eigenvalue, eigenvector
         min_eigenval_idx = np.argmin(foo1)
         v1 = v1[:, min_eigenval_idx]
         corners.v1[i] = v1
 
         foo2, v2 = LA.eig(A2)
         min_eigenval_idx = np.argmin(foo2)
-        v2 = v2[:,min_eigenval_idx]
+        v2 = v2[:, min_eigenval_idx]
         corners.v2[i] = v2
 
         ##############################
         # corner location refinement #
         ##############################
-        G = np.zeros((2,2))
-        b = np.zeros((2,1))
+        G = np.zeros((2, 2))
+        b = np.zeros((2, 1))
 
-        for v in range(max(cv - r, 0), min(cv + r+1, height)):
-            for u in range(max(cu-r, 0), min(cu+r+1, width)):
+        for v in range(max(cv - r, 0), min(cv + r + 1, height)):
+            for u in range(max(cu - r, 0), min(cu + r + 1, width)):
                 # pixel orientation vector
                 o = [img_du[v, u], img_dv[v, u]]
                 if (np.linalg.norm(o) < 0.1):
@@ -95,9 +90,9 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
                 o = o / np.linalg.norm(o)
 
                 # robust subpixel corner estimation
-                if (u != cu or v != cv): # do not consider center pixel
+                if (u != cu or v != cv):  # do not consider center pixel
 
-                    #compute rel. position of pixel and distance to vectors
+                    # compute rel. position of pixel and distance to vectors
                     w = np.subtract([u, v], [cu, cv])
                     d1 = np.linalg.norm(w - np.matmul(w, v1) * v1)
                     d2 = np.linalg.norm(w - np.matmul(w, v2) * v2)
@@ -119,7 +114,7 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
             if (np.linalg.norm(corner_pos_new - corner_pos_old) >= 4):
                 idx_to_remove.append(i)
 
-            corners.p[i] = corner_pos_new ######
+            corners.p[i] = corner_pos_new  ######
 
         # otherwise: set corner to invalid
         else:

@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.stats import norm
-import time
+
 
 class Template:
     def __init__(self, height, width):
@@ -18,8 +18,7 @@ class Template:
 
 
 def createCorrelationPatch(angle_1, angle_2, radius):
-
-    patch_size = int(radius*2 + 1)
+    patch_size = int(radius * 2 + 1)
 
     # initialize template
     template = Template(patch_size, patch_size)

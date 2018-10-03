@@ -1,10 +1,6 @@
 import numpy as np
-from numpy import linalg as LA
-import matplotlib.pyplot as plt
-import cv2
-import math
-from scipy.signal import convolve2d
 from scipy.stats import norm
+
 
 def findModesMeanShift(hist, sigma):
     # efficient mean-shift approximation by histogram smoothing

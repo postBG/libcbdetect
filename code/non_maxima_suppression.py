@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def nonMaximumSuppression(img, n, tau, margin):
     height, width = img.shape
     maxima = []
@@ -34,4 +35,3 @@ def nonMaximumSuppression(img, n, tau, margin):
     maxima = np.array(maxima)
 
     return maxima
-

@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+
+
 def imagePreprocessing(img):
     # convert to grayscale image
     if (len(img.shape) == 3):

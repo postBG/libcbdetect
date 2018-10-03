@@ -2,6 +2,7 @@ import numpy as np
 import time
 from create_correlation_patch import createCorrelationPatch
 
+
 def cornerCorrelationScore(img, img_weight, v1, v2):
     # center
     center = (img_weight.shape[0] + 1) / 2
@@ -33,7 +34,7 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
     st = time.time()
     template = createCorrelationPatch(np.arctan2(v1[1], v1[0]), np.arctan2(v2[1], v2[0]), c[0])
     end = time.time()
-    #print('createCorrelationPatch  = ', end-st)
+    # print('createCorrelationPatch  = ', end-st)
 
     # checkerboard responses
     a1 = np.sum(template.a1 * img)
@@ -55,7 +56,7 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
 
     # intensity score: max. of the 2 cases
     score_intensity = max(max(score_1, score_2), 0)
-    if(np.isnan(score_intensity)):
+    if (np.isnan(score_intensity)):
         score_intensity = 0
     # final score: product of gradient and intensity score
     score = score_gradient * score_intensity

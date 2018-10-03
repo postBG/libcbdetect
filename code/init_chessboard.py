@@ -1,5 +1,8 @@
 import numpy as np
+
 from directional_neighbor import directionalNeighbor
+
+
 def initChessboard(corners, idx):
     # not enough corners
     if (corners.p.shape[0] < 9):

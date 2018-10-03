@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def assignClosestCorners(cand, pred):
     # return error if not enough candidates are available
     if (cand.shape[0] < pred.shape[0]):

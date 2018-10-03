@@ -4,6 +4,7 @@ from init_chessboard import initChessboard
 from chessboard_energy import chessboardEnergy
 from grow_chessboard import growChessboard
 
+
 def chessboardsFromCorners(corners):
     print('Start Structure Recovery ...')
 
