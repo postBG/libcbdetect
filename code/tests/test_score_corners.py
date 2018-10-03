@@ -1,25 +1,20 @@
 import unittest
-import pickle
 
 import numpy as np
 
 from score_corners import scoreCorners
+from tests.utils import read_test_data_from_pickle
+
+
+def read_test_input_from(filename):
+    test_data = read_test_data_from_pickle(filename)
+    return test_data['img'], test_data['img_angle'], test_data['img_weight'], test_data['corners'], test_data['radius']
 
 
 class ScoreCornersTest(unittest.TestCase):
-    TEST_DATA_PATH = 'test_data/scoreCorner/data02.pkl'
-
-    def setUp(self):
-        with open(self.TEST_DATA_PATH, 'rb') as f:
-            test_data = pickle.load(f)
-            self.img = test_data['img']
-            self.img_angle = test_data['img_angle']
-            self.img_weight = test_data['img_weight']
-            self.corners = test_data['corners']
-            self.radius = test_data['radius']
-
     def test_scoreCorners(self):
-        corners = scoreCorners(self.img, self.img_angle, self.img_weight, self.corners, self.radius, 0.01)
+        img, img_angle, img_weight, corners, radius = read_test_input_from('scoreCorner/data02.pkl')
+        corners = scoreCorners(img, img_angle, img_weight, corners, radius, 0.01)
 
         np.testing.assert_almost_equal(np.array(
             [0.1403975101332953, 0.13879662617344465, 0.13537486785061956, 0.14263454370159293, 0.1409718571646737,

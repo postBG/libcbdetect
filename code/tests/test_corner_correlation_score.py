@@ -1,19 +1,19 @@
 import unittest
-import pickle
 
 from corner_correlation_score import cornerCorrelationScore
+from tests.utils import read_test_data_from_pickle
+
+
+def read_test_input_from(filename):
+    test_input = read_test_data_from_pickle(filename)
+    return test_input['img_sub'], test_input['img_weight_sub'], test_input['v1'], test_input['v2']
 
 
 class CornerCorrelationScore(unittest.TestCase):
-    TEST_DATA_PATH = 'test_data/cornerCorrelationScore/test_input.pkl'
-
-    def setUp(self):
-        with open(self.TEST_DATA_PATH, 'rb') as f:
-            test_data = pickle.load(f)
-            self.img_sub = test_data['img_sub']
-            self.img_weight_sub = test_data['img_weight_sub']
-            self.v1 = test_data['v1']
-            self.v2 = test_data['v2']
-
     def test_cornerCorrelationScore(self):
-        self.assertAlmostEqual(0.0, cornerCorrelationScore(self.img_sub, self.img_weight_sub, self.v1, self.v2))
+        img, img_weight, v1, v2 = read_test_input_from('cornerCorrelationScore/test_input.pkl')
+        self.assertAlmostEqual(0.0, cornerCorrelationScore(img, img_weight, v1, v2))
+
+    def test_cornerCorrelationScore2(self):
+        img, img_weight, v1, v2 = read_test_input_from('cornerCorrelationScore/test_input2.pkl')
+        self.assertAlmostEqual(0.0005118449002040401, cornerCorrelationScore(img, img_weight, v1, v2))
