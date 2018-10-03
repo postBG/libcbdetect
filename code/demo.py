@@ -1,4 +1,5 @@
 import time
+import argparse
 
 import matplotlib.pyplot as plt
 
@@ -12,8 +13,14 @@ from refine_corners import refineCorners
 from score_corners import scoreCorners
 
 
-def main():
-    img = plt.imread('../data/02.png')
+def get_arguments():
+    parser = argparse.ArgumentParser(description='Calibration Demo')
+    parser.add_argument('--img_path', type=str, default='../data/00.png', help='learning rate (default: 0.0001)')
+    return parser.parse_args()
+
+
+def main(args):
+    img = plt.imread(args.img_path)
     # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
     radius = [4, 8, 12]
 
@@ -62,4 +69,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(get_arguments())
