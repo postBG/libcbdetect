@@ -47,6 +47,33 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
         A1 = np.zeros((2, 2))
         A2 = np.zeros((2, 2))
 
+        # img_du_sub = img_du[max(cv - r, 0): min(cv + r + 1, height), max(cu - r, 0): min(cu + r + 1, width)]
+        # img_dv_sub = img_dv[max(cv - r, 0): min(cv + r + 1, height), max(cu - r, 0): min(cu + r + 1, width)]
+        # img_du_vec = img_du_sub.reshape(-1, 1)
+        # img_dv_vec = img_dv_sub.reshape(-1, 1)
+        #
+        # # pixel orientation vector
+        # o_vec = np.hstack((img_du_vec, img_dv_vec))
+        # o_vec = o_vec[np.where(np.linalg.norm(o_vec, axis=1) >= 0.1)]
+        # o_norm_vec = np.divide(o_vec, np.linalg.norm(o_vec, axis=1).reshape(-1, 1))
+        #
+        # # robust refinement of orientation 1
+        # idx = np.abs(np.matmul(o_norm_vec, v1) < 0.25)
+        # A1[0] = np.sum((o_vec[idx][:, 0] * o_vec[idx].T).T, axis=0)
+        # A1[1] = np.sum((o_vec[idx][:, 1] * o_vec[idx].T).T, axis=0)
+        #
+        # # robust refinement of orientation 2
+        # idx = np.abs(np.matmul(o_norm_vec, v2) < 0.25)
+        # A2[0] = np.sum((o_vec[idx][:,0] * o_vec[idx].T).T, axis = 0)
+        # A2[1] = np.sum((o_vec[idx][:,1] * o_vec[idx].T).T, axis = 0)
+        #
+        # print('A1 = ', A1)
+
+        from tests.utils import export_test_data_to_pickle
+        export_test_data_to_pickle({
+            'img_du': img_du,
+            'img_dv': img_dv
+        }, 'refineCorners/input.pkl')
         for v in range(max(cv - r, 0), min(cv + r + 1, height)):
             for u in range(max(cu - r, 0), min(cu + r + 1, width)):
                 # pixel orientation vector
@@ -63,6 +90,7 @@ def refineCorners(img_du, img_dv, img_angle, img_weight, NMS_corners, r):
                 if np.abs(np.matmul(o, v2)) < 0.25:  # inlier?
                     A2[0] = A2[0] + img_du[v, u] * np.array([img_du[v, u], img_dv[v, u]])
                     A2[1] = A2[1] + img_dv[v, u] * np.array([img_du[v, u], img_dv[v, u]])
+
 
         # set new corner orientation
         foo1, v1 = LA.eig(A1)  # eigenvalue, eigenvector

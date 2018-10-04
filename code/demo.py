@@ -22,7 +22,7 @@ def get_arguments():
 
 
 def main(args):
-    img = plt.imread('../data/00.png')
+    img = plt.imread('../data/04.png')
     # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
     radius = [4, 8, 12]
 
@@ -62,14 +62,12 @@ def main(args):
     print('score_time = ', score_time - refineCorners_time)
     print('growing time = ', end_time - score_time)
     print('total time = ', end_time - start_time)
-
     # matplot
     plotChessboards(img, chessboards, corners)
 
     print('done')
 
     return 0
-
 
 if __name__ == '__main__':
     main(get_arguments())
