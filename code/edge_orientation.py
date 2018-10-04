@@ -1,4 +1,5 @@
 import numpy as np
+from itertools import groupby
 
 from find_modes_mean_shift import findModesMeanShift
 
@@ -19,11 +20,22 @@ def edgeOrientations(img_angle, img_weight):
     vec_angle = vec_angle + np.pi / 2
     vec_angle[vec_angle > np.pi] -= np.pi
 
+
     # create histogram
     angle_hist = np.zeros(bin_num)
-    for i in range(0, len(vec_angle)):
-        bin = int(max(min(np.floor(vec_angle[i] / (np.pi / bin_num)), bin_num - 1), 0))
-        angle_hist[bin] = angle_hist[bin] + vec_weight[i]
+    bin0 = np.floor(vec_angle / (np.pi / bin_num)).astype(int)
+    bin0[bin0 < 0] = 0
+    bin0[bin0 >= bin_num] = bin_num - 1
+    d = list(zip(bin0, vec_weight))
+    for k, g in groupby(sorted(d, key=lambda x: x[0]), lambda x: x[0]):
+        l = list(g)
+        angle_hist[k] = sum([x[1] for x in l])
+
+    # # create histogram
+    # angle_hist = np.zeros(bin_num)
+    # for i in range(0, len(vec_angle)):
+    #     bin = int(max(min(np.floor(vec_angle[i] / (np.pi / bin_num)), bin_num - 1), 0))
+    #     angle_hist[bin] = angle_hist[bin] + vec_weight[i]
 
     modes, angle_hist_smoothed = findModesMeanShift(angle_hist, 1)
 

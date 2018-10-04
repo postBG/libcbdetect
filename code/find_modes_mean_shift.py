@@ -6,11 +6,23 @@ def findModesMeanShift(hist, sigma):
     # efficient mean-shift approximation by histogram smoothing
 
     # compute smoothed histogram
-    hist_smoothed = np.zeros((len(hist)))
-    for i in range(0, len(hist)):
-        j = np.arange(-np.round(2 * sigma), np.round(2 * sigma) + 1)
-        idx = np.mod(i + j, len(hist))
-        hist_smoothed[i] = np.sum(hist[idx] * norm.pdf(j, 0, sigma))
+    hist_len = len(hist)
+    # hist_smoothed = np.zeros((hist_len))
+    j = np.arange(-np.round(2 * sigma), np.round(2 * sigma) + 1)
+    norm_j = norm.pdf(j, 0, sigma)
+
+    i_vec = np.arange(0, hist_len).reshape(-1, 1)
+    j_vec = np.tile(j, (hist_len, 1))
+    idx_vec = np.mod(i_vec + j_vec, hist_len)
+    hist_smoothed = np.sum(hist[idx_vec] * norm_j, axis=1)
+
+    # compute smoothed histogram
+    # hist_smoothed = np.zeros((len(hist)))
+    # for i in range(0, len(hist)):
+    #     j = np.arange(-np.round(2 * sigma), np.round(2 * sigma) + 1)
+    #     idx = np.mod(i + j, len(hist))
+    #     hist_smoothed[i] = np.sum(hist[idx] * norm.pdf(j, 0, sigma))
+
 
     modes = []
     # check if at least one entry is non-zero

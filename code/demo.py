@@ -12,6 +12,8 @@ from plot_chessboards import plotChessboards
 from refine_corners import refineCorners
 from score_corners import scoreCorners
 
+from tests.utils import export_test_data_to_pickle
+
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Calibration Demo')
@@ -20,7 +22,7 @@ def get_arguments():
 
 
 def main(args):
-    img = plt.imread(args.img_path)
+    img = plt.imread('../data/00.png')
     # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
     radius = [4, 8, 12]
 
@@ -52,13 +54,14 @@ def main(args):
     corners.v1[idx, :] = -corners.v1[idx, :]
     chessboards = chessboardsFromCorners(corners)
 
-    elapsed_time = time.time() - start_time
+    end_time = time.time()
 
     print('findCorners_time = ', findCorners_time - start_time)
     print('NMS_time = ', NMS_time - findCorners_time)
     print('refine_time = ', refineCorners_time - NMS_time)
     print('score_time = ', score_time - refineCorners_time)
-    print('total time = ', elapsed_time)
+    print('growing time = ', end_time - score_time)
+    print('total time = ', end_time - start_time)
 
     # matplot
     plotChessboards(img, chessboards, corners)
