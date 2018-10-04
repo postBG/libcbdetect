@@ -2,21 +2,29 @@ import numpy as np
 import time
 from create_correlation_patch import createCorrelationPatch
 
+
 def cornerCorrelationScore(img, img_weight, v1, v2):
     # center
     center = (img_weight.shape[0] + 1) / 2
     c = [center - 1, center - 1]
-    img_filter = -1 * np.ones(img_weight.shape)
 
     # compute gradient filter kernel (bandwith = 3 px)
-    for y in range(0, img_weight.shape[0]):
-        for x in range(0, img_weight.shape[1]):
-            p1 = np.subtract([x, y], c)
-            p2 = np.matmul(p1, v1) * v1
-            p3 = np.matmul(p1, v2) * v2
+    vecs = np.mgrid[0:img_weight.shape[1], 0:img_weight.shape[0]].T.reshape(-1, 2)
+    p1s = vecs - c
+    p2s = np.matmul(p1s, v1)[:, np.newaxis] * v1
+    p3s = np.matmul(p1s, v2)[:, np.newaxis] * v2
 
-            if (np.linalg.norm(p1 - p2) <= 1.5 or np.linalg.norm(p1 - p3) <= 1.5):
-                img_filter[y, x] = 1
+    points_to_filter = np.logical_or(np.linalg.norm(p1s - p2s, axis=1) <= 1.5, np.linalg.norm(p1s - p3s, axis=1) <= 1.5)
+    img_filter = points_to_filter.reshape(img_weight.shape[0], img_weight.shape[1]) * 2 - 1
+
+    # for y in range(0, img_weight.shape[0]):
+    #     for x in range(0, img_weight.shape[1]):
+    #         p1 = np.subtract([x, y], c)
+    #         p2 = np.matmul(p1, v1) * v1
+    #         p3 = np.matmul(p1, v2) * v2
+    #
+    #         if np.linalg.norm(p1 - p2) <= 1.5 or np.linalg.norm(p1 - p3) <= 1.5:
+    #             img_filter[y, x] = 1
 
     # convert into vectors
     vec_weight = np.transpose(img_weight).reshape(-1, 1)
@@ -33,7 +41,7 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
     st = time.time()
     template = createCorrelationPatch(np.arctan2(v1[1], v1[0]), np.arctan2(v2[1], v2[0]), c[0])
     end = time.time()
-    #print('createCorrelationPatch  = ', end-st)
+    # print('createCorrelationPatch  = ', end-st)
 
     # checkerboard responses
     a1 = np.sum(template.a1 * img)
@@ -55,7 +63,7 @@ def cornerCorrelationScore(img, img_weight, v1, v2):
 
     # intensity score: max. of the 2 cases
     score_intensity = max(max(score_1, score_2), 0)
-    if(np.isnan(score_intensity)):
+    if (np.isnan(score_intensity)):
         score_intensity = 0
     # final score: product of gradient and intensity score
     score = score_gradient * score_intensity

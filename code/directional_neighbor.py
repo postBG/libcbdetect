@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def directionalNeighbor(idx, v, chessboard, corners):
     # list of neighboring elements, which are currently not in use
     unused = np.arange(0, corners.p.shape[0])

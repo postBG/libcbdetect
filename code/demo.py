@@ -1,24 +1,26 @@
-import numpy as np
-from numpy import linalg as LA
-import matplotlib.pyplot as plt
-import cv2
-import math
-from scipy.signal import convolve2d
-from scipy.stats import norm
 import time
+import argparse
 
-from image_preprocessing import imagePreprocessing
+import matplotlib.pyplot as plt
+
+from chessboards_from_corners import chessboardsFromCorners
 from find_corners import findCorners
-from non_maxima_suppression import nonMaximumSuppression
 from get_image_derivatives import get_img_derivatives
+from image_preprocessing import imagePreprocessing
+from non_maxima_suppression import nonMaximumSuppression
+from plot_chessboards import plotChessboards
 from refine_corners import refineCorners
 from score_corners import scoreCorners
-from chessboards_from_corners import chessboardsFromCorners
-from plot_chessboards import plotChessboards
 
-def main():
 
-    img = plt.imread('../data/00.png')
+def get_arguments():
+    parser = argparse.ArgumentParser(description='Calibration Demo')
+    parser.add_argument('--img_path', type=str, default='../data/00.png', help='learning rate (default: 0.0001)')
+    return parser.parse_args()
+
+
+def main(args):
+    img = plt.imread(args.img_path)
     # use 3 scales to obtain a modest level of scale invariance and robustness w.r.t blur
     radius = [4, 8, 12]
 
@@ -65,5 +67,6 @@ def main():
 
     return 0
 
+
 if __name__ == '__main__':
-    main()
+    main(get_arguments())

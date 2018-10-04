@@ -1,8 +1,9 @@
 import numpy as np
 
+
 def assignClosestCorners(cand, pred):
     # return error if not enough candidates are available
-    if (cand.shape[0] < pred.shape[0]):
+    if cand.shape[0] < pred.shape[0]:
         return 0
 
     # distance matrix

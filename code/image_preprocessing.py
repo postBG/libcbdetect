@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
+
+
 def imagePreprocessing(img):
     # convert to grayscale image
-    if (len(img.shape) == 3):
+    if len(img.shape) == 3:
         img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
     # normalize values between [0, 1]

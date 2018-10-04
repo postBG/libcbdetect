@@ -1,4 +1,6 @@
 import numpy as np
+
+
 def chessboardEnergy(chessboard, corners):
     h, w = chessboard.shape
     # energy: number of corners
